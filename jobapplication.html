@@ -4,7 +4,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Application Form</title>
-    <link rel="stylesheet" href="jobapplication.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #2b2b2b;
+            color: #ffffff;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border: 1px solid #6200ea;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #6200ea;
+            border: none;
+            border-radius: 4px;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+
+        .submit-button:hover {
+            background-color: #3700b3;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        input, select {
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
     <div class="form-container">
@@ -54,6 +131,89 @@
             <button type="submit" class="submit-button">Submit</button>
         </form>
     </div>
-<script src="jobapplication.js"></script>
+
+    <script>
+   document.getElementById('jobForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    let isValid = true;
+
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const contact = document.getElementById('contact').value.trim();
+    const gender = document.getElementById('gender').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    // Clear previous errors
+    document.getElementById('nameError').textContent = '';
+    document.getElementById('emailError').textContent = '';
+    document.getElementById('contactError').textContent = '';
+    document.getElementById('genderError').textContent = '';
+    document.getElementById('passwordError').textContent = '';
+    document.getElementById('confirmPasswordError').textContent = '';
+
+    // Validation
+    if (name === '') {
+        document.getElementById('nameError').textContent = 'Name is required.';
+        isValid = false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        document.getElementById('emailError').textContent = 'Enter a valid email address.';
+        isValid = false;
+    }
+
+    const contactRegex = /^\d{10}$/;
+    if (!contactRegex.test(contact)) {
+        document.getElementById('contactError').textContent = 'Enter a valid 10-digit contact number.';
+        isValid = false;
+    }
+
+    if (gender === '') {
+        document.getElementById('genderError').textContent = 'Select a gender.';
+        isValid = false;
+    }
+
+    if (password.length < 6) {
+        document.getElementById('passwordError').textContent = 'Password must be at least 6 characters long.';
+        isValid = false;
+    }
+
+    if (password !== confirmPassword) {
+        document.getElementById('confirmPasswordError').textContent = 'Passwords do not match.';
+        isValid = false;
+    }
+
+    if (isValid) {
+        const formData = new URLSearchParams();
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('contact', contact);
+        formData.append('gender', gender);
+        formData.append('password', password);
+
+        fetch('http://localhost:3000/form', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+            if (data === 'Application Submitted Successfully!') {
+                document.getElementById('jobForm').reset();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error submitting form');
+        });
+    }
+});
+    </script>
 </body>
 </html>
