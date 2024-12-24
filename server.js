@@ -27,6 +27,9 @@ const server = http.createServer((req, res) => {
             case "/admin":
                 sendFile(res, "admin.html", "text/html");
                 break;
+            case "/student":
+                sendFile(res, "student.html", "text/html");
+                break;
             case "/users":
                 sendFile(res, "User.json", "application/json");
                 break;

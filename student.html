@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-header h1 {
+            color: #ffffff;
+            margin: 10px 0;
+        }
+
+        .dashboard-header p {
+            color: #bb86fc;
+            font-size: 1.2rem;
+            margin: 5px 0;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: #1e1e1e;
+            padding: 20px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .card .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card .row:last-child {
+            margin-bottom: 0;
+        }
+
+        .card .row-label {
+            font-weight: bold;
+            color: #bb86fc;
+            margin-right: 10px;
+        }
+
+        .card .row span {
+            color: #cccccc;
+            font-size: 0.95rem;
+            flex: 1;
+        }
+
+        .card .row strong {
+            color: #ffffff;
+            font-size: 1rem;
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-header">
+        <h1>Student Dashboard</h1>
+        <p>Thanks for signing up!</p>
+    </div>
+    <div class="cards-container" id="cardsContainer"></div>
+
+    <script>
+        fetch('http://localhost:3000/users')
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('cardsContainer');
+                if (data.length === 0) {
+                    container.innerHTML = '<p>No job applications found.</p>';
+                    return;
+                }
+
+                data.forEach(user => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <div class="row">
+                            <span class="row-label">Name:</span>
+                            <strong>${user.name}</strong>
+                            <span class="row-label">Email:</span>
+                            <span>${user.email}</span>
+                        </div>
+                        <div class="row">
+                            <span class="row-label">Contact:</span>
+                            <span>${user.contact}</span>
+                            <span class="row-label">Gender:</span>
+                            <span>${user.gender}</span>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                document.getElementById('cardsContainer').innerHTML = '<p>Error loading data.</p>';
+            });
+    </script>
+</body>
+</html>
