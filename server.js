@@ -19,8 +19,38 @@ const server = http.createServer((req, res) => {
     }
 
     if (req.method === "GET") {
+        if (req.url.startsWith("/assets/")) {
+            const filePath = path.join(__dirname, req.url);
+            const ext = path.extname(filePath).toLowerCase();
+            const mimeType = {
+                ".png": "image/png",
+                ".jpg": "image/jpeg",
+                ".jpeg": "image/jpeg",
+                ".gif": "image/gif",
+                ".ico": "image/x-icon",
+            }[ext];
+        
+            if (mimeType) {
+                try {
+                    const data = fs.readFileSync(filePath);
+                    res.writeHead(200, { "Content-Type": mimeType });
+                    res.end(data);
+                } catch (error) {
+                    console.error(`Error reading ${filePath}:`, error);
+                    res.writeHead(404);
+                    res.end("File not found");
+                }
+            } else {
+                res.writeHead(415);
+                res.end("Unsupported Media Type");
+            }
+            return;
+        }
+        
         switch(req.url) {
             case "/":
+                sendFile(res,"index.html","text/html");
+                break;
             case "/form":
                 sendFile(res, "jobapplication.html", "text/html");
                 break;
@@ -47,6 +77,7 @@ const server = http.createServer((req, res) => {
                 users.push(formData);
                 fs.writeFileSync("User.json", JSON.stringify(users, null, 2));
                 res.writeHead(200, { "Content-Type": "text/plain" });
+                // res.writeHead(302, { 'Location': '/student' });
                 res.end("Application Submitted Successfully!");
             } catch (error) {
                 console.error('Error:', error);

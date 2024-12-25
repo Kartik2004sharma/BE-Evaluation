@@ -5,5 +5,26 @@
     "contact": "1234567891",
     "gender": "male",
     "password": "kartik"
+  },
+  {
+    "name": "Jeeya",
+    "email": "abcd@gmail.com",
+    "contact": "1234567891",
+    "gender": "female",
+    "password": "123456"
+  },
+  {
+    "name": "abcd",
+    "email": "abcd@gmail.com",
+    "contact": "9876543210",
+    "gender": "male",
+    "password": "123456"
+  },
+  {
+    "name": "abcd",
+    "email": "abcd@gmail.com",
+    "contact": "9876543210",
+    "gender": "male",
+    "password": "123456"
   }
 ]

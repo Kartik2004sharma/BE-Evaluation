@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <link rel="shortcut icon" href="assets/icon.png" type="image/x-icon">
+    <style>
+        body{
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #121212;
+        }
+        .navbar{
+            background: #121212;
+            display: flex;
+            justify-content: space-between;
+            padding-left: 70px;
+            padding-right: 200px;
+            position: fixed;
+            box-shadow: #6200ea 0px 0.01px 30px 0px;
+            border-bottom: 2px solid #4d4c4c;
+        }
+        .navbar ul{
+            list-style-type: none;
+            display: flex;
+            justify-content: space-evenly;
+        }
+        .navbar ul li{
+            margin-top: 25px;
+        }
+        .navbar ul li a{
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .navbar ul li a:hover{
+            color: #bb86fc;
+        }
+        .contents{
+            width: 1000px;
+            margin-left: 300px;
+        }
+        .icon{
+            width: 150px;
+            margin: 10px;
+            display: flex;
+            color: #ffffff;
+            justify-content: space-between;
+            font-size: larger;
+        }
+
+        .div_1{
+            height: 450px;
+            background-image: url('assets/landing_1.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            z-index: -1;
+            position: relative;
+            padding-top: 100px;
+        }
+        .div_1 .div1_contents{
+            z-index: 1;
+            position: absolute;
+            margin-top: 120px;
+            margin-left: 150px;
+        }
+        .div_1 h1{
+            font-weight: 900;
+        }
+        .div_1 button{
+            background-color: #6200ea;
+            color: #ffffff;
+            border: none;
+            padding: 25px;
+            font-size: larger;
+            font-weight: 600;
+            border-radius: 7px;
+            margin-left: 300px;
+        }
+        .div1_contents p{
+            color: rgb(53, 53, 53);
+            font-size: larger;
+            font-weight: 600;
+            margin-bottom: -20px;
+        }
+        .features{
+            display: flex;
+            justify-content: space-evenly;
+            z-index: 1;
+            /* margin-top: -10px; */
+            margin-top: 20px;
+            margin-bottom: 50px;
+        }
+        .card{
+            background-color: #1f1e1e;
+            height: 250px;
+            width: 300px;
+            padding: 10px;
+            border-radius: 20px;
+            text-align: justify;
+            /* color: #dcc2fc; */
+            color: #ffffff;
+            border: 1px solid #bb86fc;
+            box-shadow: #bb86fc 0px 0.01px 5px 0px;
+        }
+        .card h1{
+            text-align: center;
+        }
+
+        .card p{
+            margin-top: 30px;
+        }
+        #card-icon{
+            color: #bb86fc;
+            font-size: larger;
+        }
+        .card:hover{
+            background-color: #bb86fc;
+            color: #121212;
+            border: 1px solid black;
+            #card-icon{
+                color: black;
+            }
+        }
+        #features{
+            color: #dccbf0;
+            text-align: center;
+        }
+
+        footer{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+            padding: 30px;
+        }
+        .socials{
+            display: flex;
+            width: 500px;
+            justify-content: space-evenly;
+            color: #ffffff;
+        }
+        
+        .contacts{
+            display: flex;
+            justify-content: space-evenly;
+            width: 700px;
+            color: #ffffff;
+            font-size: small;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar" id="navbar">
+            <div class="icon">
+                <img src="assets/icon.png" alt="" width="70px" height="70px">
+                <h1>Jobify</h1>
+            </div>
+            <div class="contents">
+                <ul>
+                    <li><a href="http://localhost:3000/">Home</a></li>
+                    <li><a href="http://localhost:3000/form">Register</a></li>
+                    <li><a href="http://localhost:3000/student">User Dashboard</a></li>
+                    <li><a href="http://localhost:3000/admin">Admin Dashboard</a></li>
+                </ul>
+            </div>
+        </nav>
+    <div class="div_1">
+        <div class="div1_contents">
+            <p>India's best job application platform</p>
+            <h1>Land your Dream Job with ease with Jobify!</h1>
+            <button>Apply Now</button>
+        </div>
+    </div>
+    <h1 id="features"><big>Features Provided by Jobify:</big></h1>
+    <div class="features">
+        <div class="card">
+            <h1><i id="card-icon" class="fa-regular fa-pen-to-square"></i></h1>
+            <h1>Seamless Applications</h1>
+            <p>Effortlessly apply for jobs with our intuitive and streamlined process. Save time with auto-fill forms and one-click submissions.</p>
+        </div>
+        <div class="card">
+            <h1><i id="card-icon" class="fa-solid fa-square-poll-vertical"></i></h1>
+            <h1>Tailored Job Matches</h1>
+            <p>Get job opportunities curated just for you, based on your profile, skills, and preferences.</p>
+        </div>
+        <div class="card">
+            <h1><i id="card-icon" class="fa-solid fa-address-card"></i></h1>
+            <h1>All-in-One Dashboard</h1>
+            <p>Manage your applications, track your progress, and stay updated with real-time notifications—all in one place.</p>
+        </div>
+        <div class="card">
+            <h1><i id="card-icon" class="fa-solid fa-user-check"></i></h1>
+            <h1>Showcase Your Skills</h1>
+            <p>Take quick skill tests to stand out and demonstrate your abilities to potential employers.</p>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="socials">
+            <h2><i class="fa-brands fa-facebook"></i></h2>
+            <h2><i class="fa-brands fa-instagram"></i></h2>
+            <h2><i class="fa-brands fa-twitter"></i></h2>
+            <h2><i class="fa-brands fa-linkedin"></i></h2>
+        </div>
+        <div class="contacts">
+            <p>Contact Us</p>
+            <p>Our Services</p>
+            <p>Privacy Policy</p>
+            <p>Terms and Conditions</p>
+        </div>
+    </footer>
+    </div>
+    <script src="https://kit.fontawesome.com/a91acee77a.js" crossorigin="anonymous"></script>
+</body>
+</html>

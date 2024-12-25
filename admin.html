@@ -4,15 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
+    <link rel="shortcut icon" href="assets/icon.png" type="image/x-icon">
     <style>
         body {
             font-family: Arial, sans-serif;
             background: #121212;
             color: #e0e0e0;
             margin: 0;
-            padding: 20px;
+            /* padding: 20px; */
+            padding: 0;
         }
-
+        
+        .admin-container{
+            padding: 20px;
+            padding-top: 130px;
+        }
         .dashboard-header {
             background: #1e1e1e;
             padding: 20px;
@@ -23,6 +29,7 @@
         .dashboard-header h1 {
             margin: 0;
             color: #ffffff;
+            text-align: center;
         }
 
         .stats {
@@ -116,54 +123,149 @@
             padding: 20px;
             color: #666;
         }
+        .navbar{
+            background: #121212;
+            display: flex;
+            justify-content: space-between;
+            padding-left: 70px;
+            padding-right: 200px;
+            position: fixed;
+            box-shadow: #6200ea 0px 0.01px 30px 0px;
+            border-bottom: 2px solid #4d4c4c;
+            z-index: 1000;
+        }
+        .navbar ul{
+            list-style-type: none;
+            display: flex;
+            justify-content: space-evenly;
+        }
+        .navbar ul li{
+            margin-top: 25px;
+        }
+        .navbar ul li a{
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .navbar ul li a:hover{
+            color: #bb86fc;
+        }
+        .contents{
+            width: 1000px;
+            margin-left: 300px;
+        }
+        .icon{
+            width: 150px;
+            margin: 10px;
+            display: flex;
+            color: #ffffff;
+            justify-content: space-between;
+            font-size: larger;
+        }
+        footer{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+            padding: 30px;
+            margin-top: 50px;
+        }
+        .socials{
+            display: flex;
+            width: 500px;
+            justify-content: space-evenly;
+            color: #ffffff;
+        }
+        
+        .contacts{
+            display: flex;
+            justify-content: space-evenly;
+            width: 700px;
+            color: #ffffff;
+            font-size: small;
+            margin-top: 30px;
+        }
     </style>
 </head>
 <body>
-    <div class="dashboard-header">
-        <h1>Admin Dashboard</h1>
+    <div class="container">
+        <nav class="navbar" id="navbar">
+            <div class="icon">
+                <img src="assets/icon.png" alt="" width="70px" height="70px">
+                <h1>Jobify</h1>
+            </div>
+            <div class="contents">
+                <ul>
+                    <li><a href="http://localhost:3000/">Home</a></li>
+                    <li><a href="http://localhost:3000/form">Register</a></li>
+                    <li><a href="http://localhost:3000/student">User Dashboard</a></li>
+                    <li><a href="http://localhost:3000/admin">Admin Dashboard</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="admin-container">
+            <div class="dashboard-header">
+                <h1>Admin Dashboard</h1>
+            </div>
+        
+            <div class="stats">
+                <div class="stat-card">
+                    <h3>Total Applications</h3>
+                    <div id="totalApplications">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Male</h3>
+                    <div id="maleCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Female</h3>
+                    <div id="femaleCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Others</h3>
+                    <div id="othersCount">0</div>
+                </div>
+            </div>
+        
+            <div class="controls">
+                <input type="search" id="searchInput" placeholder="Search...">
+                <select id="filterGender">
+                    <option value="">All Genders</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="others">Others</option>
+                </select>
+            </div>
+        
+            <table>
+                <thead>
+                    <tr>
+                        <th data-sort="name">Name <span class="sort-icon"></span></th>
+                        <th data-sort="email">Email <span class="sort-icon"></span></th>
+                        <th data-sort="contact">Contact <span class="sort-icon"></span></th>
+                        <th data-sort="gender">Gender <span class="sort-icon"></span></th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
     </div>
-
-    <div class="stats">
-        <div class="stat-card">
-            <h3>Total Applications</h3>
-            <div id="totalApplications">0</div>
+    <footer>
+        <div class="socials">
+            <h2><i class="fa-brands fa-facebook"></i></h2>
+            <h2><i class="fa-brands fa-instagram"></i></h2>
+            <h2><i class="fa-brands fa-twitter"></i></h2>
+            <h2><i class="fa-brands fa-linkedin"></i></h2>
         </div>
-        <div class="stat-card">
-            <h3>Male</h3>
-            <div id="maleCount">0</div>
+        <div class="contacts">
+            <p>Contact Us</p>
+            <p>Our Services</p>
+            <p>Privacy Policy</p>
+            <p>Terms and Conditions</p>
         </div>
-        <div class="stat-card">
-            <h3>Female</h3>
-            <div id="femaleCount">0</div>
-        </div>
-        <div class="stat-card">
-            <h3>Others</h3>
-            <div id="othersCount">0</div>
-        </div>
+    </footer>
     </div>
-
-    <div class="controls">
-        <input type="search" id="searchInput" placeholder="Search...">
-        <select id="filterGender">
-            <option value="">All Genders</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="others">Others</option>
-        </select>
-    </div>
-
-    <table>
-        <thead>
-            <tr>
-                <th data-sort="name">Name <span class="sort-icon"></span></th>
-                <th data-sort="email">Email <span class="sort-icon"></span></th>
-                <th data-sort="contact">Contact <span class="sort-icon"></span></th>
-                <th data-sort="gender">Gender <span class="sort-icon"></span></th>
-            </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-    </table>
-
+    <script src="https://kit.fontawesome.com/a91acee77a.js" crossorigin="anonymous"></script>
     <script>
         let userData = [];
         let currentSort = { field: null, direction: 'asc' };
