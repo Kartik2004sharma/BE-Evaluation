@@ -1,0 +1,68 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+
+<div class="container">
+    <div class="tasks-header">
+        <h2>My Tasks</h2>
+        <a href="/tasks/add" class="btn btn-primary">
+            <i class="fas fa-plus"></i> New Task
+        </a>
+    </div>
+
+    <%- include('../partials/messages') %>
+
+    <div class="task-filters">
+        <select id="statusFilter" class="form-control">
+            <option value="all">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="in-progress">In Progress</option>
+            <option value="completed">Completed</option>
+        </select>
+
+        <select id="priorityFilter" class="form-control">
+            <option value="all">All Priorities</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+        </select>
+    </div>
+
+    <div class="task-list">
+        <% if(tasks.length > 0) { %>
+            <% tasks.forEach(task => { %>
+                <div class="task-card <%= task.status %>">
+                    <div class="task-content">
+                        <h3 class="task-title"><%= task.title %></h3>
+                        <p class="task-description"><%= task.description %></p>
+                        <div class="task-meta">
+                            <span class="priority <%= task.priority %>">
+                                <%= task.priority.charAt(0).toUpperCase() + task.priority.slice(1) %>
+                            </span>
+                            <span class="due-date">
+                                Due: <%= new Date(task.dueDate).toLocaleDateString() %>
+                            </span>
+                            <span class="status <%= task.status %>">
+                                <%= task.status.charAt(0).toUpperCase() + task.status.slice(1) %>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <a href="/tasks/edit/<%= task._id %>" class="btn btn-edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form action="/tasks/<%= task._id %>?_method=DELETE" method="POST" style="display: inline;">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="btn btn-delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p class="no-tasks">No tasks found. Create a new task to get started!</p>
+        <% } %>
+    </div>
+</div>
+
+<%- include('../partials/footer') %> 
