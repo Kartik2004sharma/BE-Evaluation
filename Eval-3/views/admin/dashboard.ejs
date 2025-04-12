@@ -1,0 +1,189 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+
+<div class="admin-dashboard">
+    <div class="container">
+        <h1>Admin Dashboard <span class="connection-status" id="connectionStatus"></span></h1>
+        
+        <div class="dashboard-grid">
+            <!-- Last Operated Account Section -->
+            <div class="dashboard-card">
+                <h2>Last Operated Account</h2>
+                <div id="lastUserInfo">
+                    <% if (lastUser) { %>
+                        <div class="user-info">
+                            <p><strong>Name:</strong> <span id="userName"><%= lastUser.name %></span></p>
+                            <p><strong>Email:</strong> <span id="userEmail"><%= lastUser.email %></span></p>
+                            <p><strong>Role:</strong> <span id="userRole"><%= lastUser.role %></span></p>
+                            <p><strong>Last Login:</strong> <span id="userLastLogin"><%= new Date(lastUser.lastLogin).toLocaleString() %></span></p>
+                        </div>
+                    <% } else { %>
+                        <p class="no-data">No user data available</p>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Geolocation Data Section -->
+            <div class="dashboard-card">
+                <h2>Geolocation Data</h2>
+                <div id="geolocationInfo">
+                    <% if (geolocationData) { %>
+                        <div class="location-info">
+                            <p><strong>IP Address:</strong> <span id="ipAddress"><%= geolocationData.ip %></span></p>
+                            <p><strong>City:</strong> <span id="city"><%= geolocationData.city || 'Not available' %></span></p>
+                            <p><strong>Region:</strong> <span id="region"><%= geolocationData.region || 'Not available' %></span></p>
+                            <p><strong>Country:</strong> <span id="country"><%= geolocationData.country || 'Not available' %></span></p>
+                            <p><strong>Location:</strong> <span id="location"><%= geolocationData.loc || 'Not available' %></span></p>
+                            <p><strong>Organization:</strong> <span id="org"><%= geolocationData.org || 'Not available' %></span></p>
+                            <p><strong>Timezone:</strong> <span id="timezone"><%= geolocationData.timezone || 'Not available' %></span></p>
+                            <% if (geolocationData.city === 'Local Development') { %>
+                                <p class="local-dev-note"><i class="fas fa-info-circle"></i> This is local development data. Real geolocation data will be shown in production.</p>
+                            <% } %>
+                        </div>
+                    <% } else { %>
+                        <p class="no-data">No geolocation data available</p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+    const connectionStatus = document.getElementById('connectionStatus');
+
+    // Update connection status
+    socket.on('connect', () => {
+        connectionStatus.innerHTML = '<i class="fas fa-circle" style="color: #10B981;"></i> Connected';
+    });
+
+    socket.on('disconnect', () => {
+        connectionStatus.innerHTML = '<i class="fas fa-circle" style="color: #EF4444;"></i> Disconnected';
+    });
+
+    // Handle real-time updates
+    socket.on('dashboardData', (data) => {
+        // Update last user info
+        if (data.lastUser) {
+            document.getElementById('userName').textContent = data.lastUser.name;
+            document.getElementById('userEmail').textContent = data.lastUser.email;
+            document.getElementById('userRole').textContent = data.lastUser.role;
+            document.getElementById('userLastLogin').textContent = new Date(data.lastUser.lastLogin).toLocaleString();
+        }
+
+        // Update geolocation info
+        if (data.geolocationData) {
+            document.getElementById('ipAddress').textContent = data.geolocationData.ip;
+            document.getElementById('city').textContent = data.geolocationData.city || 'Not available';
+            document.getElementById('region').textContent = data.geolocationData.region || 'Not available';
+            document.getElementById('country').textContent = data.geolocationData.country || 'Not available';
+            document.getElementById('location').textContent = data.geolocationData.loc || 'Not available';
+            document.getElementById('org').textContent = data.geolocationData.org || 'Not available';
+            document.getElementById('timezone').textContent = data.geolocationData.timezone || 'Not available';
+        }
+    });
+</script>
+
+<style>
+.admin-dashboard {
+    padding: 2rem;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    color: #fff;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    color: #fff;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.dashboard-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-card h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: #60a5fa;
+}
+
+.user-info, .location-info {
+    display: grid;
+    gap: 1rem;
+}
+
+.user-info p, .location-info p {
+    margin: 0;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-info p:last-child, .location-info p:last-child {
+    border-bottom: none;
+}
+
+.no-data {
+    text-align: center;
+    color: #9ca3af;
+    font-style: italic;
+}
+
+strong {
+    color: #60a5fa;
+}
+
+.local-dev-note {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background-color: rgba(96, 165, 250, 0.1);
+    border-radius: 5px;
+    color: #60a5fa;
+    font-size: 0.9rem;
+}
+
+.local-dev-note i {
+    margin-right: 0.5rem;
+}
+
+.connection-status {
+    font-size: 1rem;
+    margin-left: 1rem;
+    font-weight: normal;
+}
+
+.connection-status i {
+    margin-right: 0.5rem;
+}
+
+/* Add animation for updates */
+@keyframes highlight {
+    0% { background-color: rgba(96, 165, 250, 0.1); }
+    100% { background-color: transparent; }
+}
+
+.highlight {
+    animation: highlight 1s ease-in-out;
+}
+</style>
+
+<%- include('../partials/footer') %> 

@@ -1,0 +1,19 @@
+2025-04-12T15:10:25.304Z [INFO]: User admin@tasksmart.com viewed all tasks
+2025-04-12T15:15:21.838Z [INFO]: User admin@tasksmart.com created task: knqknq
+2025-04-12T15:15:21.876Z [INFO]: User admin@tasksmart.com viewed all tasks
+2025-04-12T15:15:24.399Z [ERROR]: Error deleting task: task.remove is not a function
+2025-04-12T15:15:24.411Z [INFO]: User admin@tasksmart.com viewed all tasks
+2025-04-12T15:15:29.022Z [ERROR]: Error deleting task: task.remove is not a function
+2025-04-12T15:15:29.035Z [INFO]: User admin@tasksmart.com viewed all tasks
+2025-04-12T15:15:35.950Z [INFO]: User admin@tasksmart.com updated task: knqknq
+2025-04-12T15:15:35.960Z [INFO]: User admin@tasksmart.com viewed all tasks
+2025-04-12T15:15:37.612Z [ERROR]: Error deleting task: task.remove is not a function
+2025-04-12T15:15:37.625Z [INFO]: User admin@tasksmart.com viewed all tasks
+2025-04-12T15:16:11.617Z [INFO]: User admin@tasksmart.com viewed all tasks
+2025-04-12T15:16:14.251Z [INFO]: User admin@tasksmart.com viewed all tasks
+2025-04-12T15:29:01.540Z [ERROR]: Error deleting task: task.remove is not a function
+2025-04-12T15:29:01.552Z [INFO]: User ks9034214356@gmail.com viewed all tasks
+2025-04-12T15:32:08.759Z [INFO]: User ks9034214356@gmail.com deleted task: fhvhvhv
+2025-04-12T15:32:08.778Z [INFO]: User ks9034214356@gmail.com viewed all tasks
+2025-04-12T15:32:41.554Z [INFO]: User admin@tasksmart.com deleted task: knqknq
+2025-04-12T15:32:41.570Z [INFO]: User admin@tasksmart.com viewed all tasks

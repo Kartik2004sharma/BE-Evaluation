@@ -1,0 +1,255 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+
+<div class="task-history-container">
+    <h1>Task History</h1>
+
+    <div class="history-timeline">
+        <% if (taskHistory && taskHistory.length > 0) { %>
+            <% taskHistory.forEach(record => { %>
+                <div class="history-item <%= record.action %>">
+                    <div class="history-icon">
+                        <i class="fas fa-<%= record.action === 'created' ? 'plus' : record.action === 'updated' ? 'edit' : 'trash' %>"></i>
+                    </div>
+                    <div class="history-content">
+                        <div class="history-header">
+                            <span class="action-badge <%= record.action %>">
+                                <%= record.action.toUpperCase() %>
+                            </span>
+                            <span class="timestamp">
+                                <%= new Date(record.timestamp).toLocaleString() %>
+                            </span>
+                            <span class="user-info">
+                                by <%= record.performedBy.name %> (<%= record.performedBy.email %>)
+                            </span>
+                        </div>
+                        <div class="task-details">
+                            <h3><%= record.taskData.title %></h3>
+                            <p><%= record.taskData.description %></p>
+                            <p class="task-meta">
+                                Status: <span class="status-badge <%= record.taskData.status %>">
+                                    <%= record.taskData.status %>
+                                </span>
+                                <% if (record.taskData.dueDate) { %>
+                                    | Due: <%= new Date(record.taskData.dueDate).toLocaleDateString() %>
+                                <% } %>
+                            </p>
+                        </div>
+                        <% if (record.action === 'updated' && record.changes && Object.keys(record.changes).length > 0) { %>
+                            <div class="changes-details">
+                                <h4>Changes Made:</h4>
+                                <ul>
+                                    <% Object.entries(record.changes).forEach(([field, change]) => { %>
+                                        <li>
+                                            <strong><%= field %>:</strong>
+                                            <span class="old-value"><%= change.from || 'none' %></span>
+                                            <i class="fas fa-arrow-right"></i>
+                                            <span class="new-value"><%= change.to || 'none' %></span>
+                                        </li>
+                                    <% }) %>
+                                </ul>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <div class="no-history">
+                <i class="fas fa-history"></i>
+                <p>No task history available</p>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #000000;
+        color: #ffffff;
+        font-family: 'Courier New', monospace;
+    }
+
+    .task-history-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    h1 {
+        text-align: center;
+        color: #60a5fa;
+        margin-bottom: 3rem;
+        font-size: 2.5rem;
+        text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+    }
+
+    .history-timeline {
+        position: relative;
+        padding: 2rem 0;
+    }
+
+    .history-timeline::before {
+        content: '';
+        position: absolute;
+        left: 50px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #374151;
+    }
+
+    .history-item {
+        display: flex;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    .history-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #1f2937;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 2rem;
+        position: relative;
+        z-index: 1;
+        border: 2px solid;
+    }
+
+    .history-item.created .history-icon {
+        border-color: #10b981;
+        color: #10b981;
+    }
+
+    .history-item.updated .history-icon {
+        border-color: #60a5fa;
+        color: #60a5fa;
+    }
+
+    .history-item.deleted .history-icon {
+        border-color: #ef4444;
+        color: #ef4444;
+    }
+
+    .history-content {
+        flex: 1;
+        background: #1f2937;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .history-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .action-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .action-badge.created {
+        background-color: rgba(16, 185, 129, 0.2);
+        color: #10b981;
+    }
+
+    .action-badge.updated {
+        background-color: rgba(96, 165, 250, 0.2);
+        color: #60a5fa;
+    }
+
+    .action-badge.deleted {
+        background-color: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+    }
+
+    .timestamp {
+        color: #9ca3af;
+        font-size: 0.875rem;
+    }
+
+    .user-info {
+        color: #d1d5db;
+        font-size: 0.875rem;
+    }
+
+    .task-details {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 1rem;
+        border-radius: 6px;
+        margin: 1rem 0;
+    }
+
+    .task-details h3 {
+        margin: 0 0 0.5rem 0;
+        color: #f3f4f6;
+    }
+
+    .task-meta {
+        margin-top: 0.5rem;
+        color: #9ca3af;
+        font-size: 0.875rem;
+    }
+
+    .status-badge {
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+    }
+
+    .changes-details {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 1rem;
+        border-radius: 6px;
+        margin-top: 1rem;
+    }
+
+    .changes-details h4 {
+        margin: 0 0 0.5rem 0;
+        color: #60a5fa;
+    }
+
+    .changes-details ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .changes-details li {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .old-value {
+        color: #ef4444;
+    }
+
+    .new-value {
+        color: #10b981;
+    }
+
+    .no-history {
+        text-align: center;
+        padding: 3rem;
+        color: #6b7280;
+    }
+
+    .no-history i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+</style>
+
+<%- include('../partials/footer') %> 

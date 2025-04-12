@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="https://kit.fontawesome.com/a91acee77a.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+        }
+
+        .logs-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+
+        .logs-container h1 {
+            text-align: center;
+            color: #60a5fa;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+        }
+
+        .logs-actions {
+            margin-bottom: 2rem;
+            text-align: right;
+        }
+
+        .btn-danger {
+            background-color: #dc2626;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            background-color: #b91c1c;
+            box-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+        }
+
+        .logs-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .logs-section {
+            background-color: #111827;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            border: 1px solid #374151;
+        }
+
+        .logs-section h2 {
+            color: #60a5fa;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logs-section h2 i {
+            color: #60a5fa;
+        }
+
+        .logs-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .log-item {
+            background-color: #1f2937;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            color: #e5e7eb;
+            border-left: 3px solid #60a5fa;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: 'Courier New', monospace;
+        }
+
+        .log-item:hover {
+            background-color: #2d3748;
+            box-shadow: 0 0 10px rgba(96, 165, 250, 0.2);
+        }
+
+        .no-logs {
+            color: #6b7280;
+            text-align: center;
+            padding: 2rem;
+            font-style: italic;
+        }
+
+        /* Terminal-style scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #60a5fa;
+        }
+
+        /* Animation for new logs */
+        @keyframes newLog {
+            from {
+                background-color: #60a5fa33;
+            }
+            to {
+                background-color: #1f2937;
+            }
+        }
+
+        .new-log {
+            animation: newLog 2s ease-out;
+        }
+
+        /* Error log highlighting */
+        .log-item.error {
+            border-left-color: #dc2626;
+        }
+
+        /* Warning log highlighting */
+        .log-item.warning {
+            border-left-color: #f59e0b;
+        }
+
+        /* Success log highlighting */
+        .log-item.success {
+            border-left-color: #10b981;
+        }
+
+        /* Task History Styles */
+        .task-history-item {
+            border-left-width: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .task-history-item.created {
+            border-left-color: #10b981;
+        }
+
+        .task-history-item.updated {
+            border-left-color: #60a5fa;
+        }
+
+        .task-history-item.deleted {
+            border-left-color: #ef4444;
+        }
+
+        .task-history-item .log-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .created .action-badge {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .updated .action-badge {
+            background-color: rgba(96, 165, 250, 0.2);
+            color: #60a5fa;
+        }
+
+        .deleted .action-badge {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .timestamp {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        .task-details {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .changes {
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid rgba(156, 163, 175, 0.2);
+        }
+
+        .change-item {
+            margin-top: 0.25rem;
+            font-size: 0.8125rem;
+            color: #9ca3af;
+        }
+
+        .old-value {
+            color: #ef4444;
+            text-decoration: line-through;
+        }
+
+        .new-value {
+            color: #10b981;
+        }
+
+        .log-container {
+            max-height: 400px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+        }
+
+        .log-entry {
+            font-family: monospace;
+            white-space: pre-wrap;
+            margin-bottom: 5px;
+            padding: 5px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <%- include('../partials/header') %>
+    <%- include('../partials/navbar') %>
+    
+    <div class="logs-dashboard">
+        <div class="dashboard-header">
+            <h1>System Logs</h1>
+            <div class="connection-badge">
+                <span class="status-dot"></span>
+                Connected
+            </div>
+        </div>
+
+        <div class="logs-grid">
+            <!-- Task History Section -->
+            <div class="log-section">
+                <div class="section-header">
+                    <div class="header-title">
+                        <i class="fas fa-history"></i>
+                        <h2>Task History</h2>
+                    </div>
+                    <button class="toggle-btn" onclick="toggleSection('taskHistory')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="section-content" id="taskHistory">
+                    <div class="log-entries">
+                        <% if (taskHistory && taskHistory.length > 0) { %>
+                            <% taskHistory.forEach(history => { %>
+                                <div class="log-entry">
+                                    <div class="timestamp"><%= new Date(history.timestamp).toLocaleString() %></div>
+                                    <div class="log-details">
+                                        <span class="badge <%= history.action %>">
+                                            <i class="fas <%= history.action === 'created' ? 'fa-plus' : 
+                                                            history.action === 'updated' ? 'fa-edit' : 
+                                                            'fa-trash' %>"></i>
+                                            <%= history.action %>
+                                        </span>
+                                        <span class="task-title"><%= history.taskTitle %></span>
+                                        <span class="user-info">by <%= history.performedBy ? history.performedBy.name : 'Unknown' %></span>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="empty-state">
+                                <i class="fas fa-history"></i>
+                                <p>No task history available</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deleted Tasks Section -->
+            <div class="log-section">
+                <div class="section-header">
+                    <div class="header-title">
+                        <i class="fas fa-trash-alt"></i>
+                        <h2>Deleted Tasks</h2>
+                    </div>
+                    <button class="toggle-btn" onclick="toggleSection('deletedTasks')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="section-content" id="deletedTasks">
+                    <div class="log-entries">
+                        <% if (deletedLogs && deletedLogs.length > 0) { %>
+                            <% deletedLogs.forEach(log => { %>
+                                <div class="log-entry">
+                                    <div class="timestamp"><%= new Date(log.deletedAt).toLocaleString() %></div>
+                                    <div class="log-details">
+                                        <span class="task-title"><%= log.taskTitle %></span>
+                                        <span class="user-info">by <%= log.deletedBy ? log.deletedBy.name : 'Unknown' %></span>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="empty-state">
+                                <i class="fas fa-trash-alt"></i>
+                                <p>No deleted tasks</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Logs Section -->
+            <div class="log-section">
+                <div class="section-header">
+                    <div class="header-title">
+                        <i class="fas fa-chart-line"></i>
+                        <h2>Activity Logs</h2>
+                    </div>
+                    <button class="toggle-btn" onclick="toggleSection('activityLogs')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="section-content" id="activityLogs">
+                    <div class="log-entries">
+                        <% if (activityLogs && activityLogs.length > 0) { %>
+                            <% activityLogs.forEach(log => { %>
+                                <div class="log-entry">
+                                    <div class="timestamp"><%= new Date(log.timestamp).toLocaleString() %></div>
+                                    <div class="log-details">
+                                        <span class="badge <%= log.action %>"><%= log.action %></span>
+                                        <span class="details-text"><%= log.details %></span>
+                                        <span class="user-info">by <%= log.performedBy ? log.performedBy.name : 'Unknown' %></span>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="empty-state">
+                                <i class="fas fa-chart-line"></i>
+                                <p>No activity logs available</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Access Logs Section -->
+            <div class="log-section">
+                <div class="section-header">
+                    <div class="header-title">
+                        <i class="fas fa-key"></i>
+                        <h2>Access Logs</h2>
+                    </div>
+                    <button class="toggle-btn" onclick="toggleSection('accessLogs')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="section-content" id="accessLogs">
+                    <div class="log-entries monospace">
+                        <% if (accessLogs && accessLogs.length > 0) { %>
+                            <% accessLogs.forEach(log => { %>
+                                <div class="log-entry <%= log.includes('ERROR') ? 'error' : 
+                                                       log.includes('WARN') ? 'warning' : 
+                                                       log.includes('SUCCESS') ? 'success' : '' %>">
+                                    <div class="log-icon">
+                                        <i class="fas <%= log.includes('ERROR') ? 'fa-exclamation-circle' : 
+                                                        log.includes('WARN') ? 'fa-exclamation-triangle' : 
+                                                        log.includes('SUCCESS') ? 'fa-check-circle' : 'fa-info-circle' %>">
+                                        </i>
+                                    </div>
+                                    <div class="log-content"><%= log %></div>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="empty-state">
+                                <i class="fas fa-key"></i>
+                                <p>No access logs available</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task Logs Section -->
+            <div class="log-section">
+                <div class="section-header">
+                    <div class="header-title">
+                        <i class="fas fa-tasks"></i>
+                        <h2>Task Logs</h2>
+                    </div>
+                    <button class="toggle-btn" onclick="toggleSection('taskLogs')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="section-content" id="taskLogs">
+                    <div class="log-entries monospace">
+                        <% if (taskLogs && taskLogs.length > 0) { %>
+                            <% taskLogs.forEach(log => { %>
+                                <div class="log-entry <%= log.includes('ERROR') ? 'error' : 
+                                                       log.includes('WARN') ? 'warning' : 
+                                                       log.includes('SUCCESS') ? 'success' : '' %>">
+                                    <div class="log-icon">
+                                        <i class="fas <%= log.includes('ERROR') ? 'fa-exclamation-circle' : 
+                                                        log.includes('WARN') ? 'fa-exclamation-triangle' : 
+                                                        log.includes('SUCCESS') ? 'fa-check-circle' : 'fa-info-circle' %>">
+                                        </i>
+                                    </div>
+                                    <div class="log-content"><%= log %></div>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="empty-state">
+                                <i class="fas fa-tasks"></i>
+                                <p>No task logs available</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+    :root {
+        --background-color: #1a1a1a;
+        --card-background: #2d2d2d;
+        --header-background: #252525;
+        --text-primary: #ffffff;
+        --text-secondary: #a0aec0;
+        --accent-blue: #3b82f6;
+        --accent-green: #10b981;
+        --accent-red: #ef4444;
+        --accent-yellow: #f59e0b;
+    }
+
+    body {
+        background-color: var(--background-color);
+        color: var(--text-primary);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .logs-dashboard {
+        padding: 2rem;
+        min-height: 100vh;
+    }
+
+    .dashboard-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        padding: 1rem 2rem;
+        background: var(--header-background);
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .dashboard-header h1 {
+        margin: 0;
+        font-size: 2.5rem;
+        font-weight: 700;
+    }
+
+    .connection-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: rgba(16, 185, 129, 0.1);
+        border-radius: 20px;
+        color: var(--accent-green);
+    }
+
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        background-color: var(--accent-green);
+        border-radius: 50%;
+    }
+
+    .logs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .log-section {
+        background: var(--card-background);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        background: rgba(0, 0, 0, 0.2);
+    }
+
+    .header-title {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: var(--accent-blue);
+    }
+
+    .header-title h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .toggle-btn {
+        background: transparent;
+        border: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+    }
+
+    .toggle-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .section-content {
+        padding: 1.5rem;
+    }
+
+    .log-entries {
+        max-height: 400px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .log-entry {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        transition: transform 0.2s ease;
+    }
+
+    .log-entry:hover {
+        transform: translateX(5px);
+    }
+
+    .timestamp {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+    }
+
+    .log-details {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .badge.created {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--accent-green);
+    }
+
+    .badge.updated {
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--accent-blue);
+    }
+
+    .badge.deleted {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--accent-red);
+    }
+
+    .task-title {
+        font-weight: 500;
+    }
+
+    .user-info {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-secondary);
+    }
+
+    .empty-state i {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    .monospace .log-entry {
+        font-family: 'Courier New', monospace;
+    }
+
+    .log-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+    }
+
+    .error {
+        border-left: 4px solid var(--accent-red);
+    }
+
+    .warning {
+        border-left: 4px solid var(--accent-yellow);
+    }
+
+    .success {
+        border-left: 4px solid var(--accent-green);
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Animations */
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .log-section {
+        animation: slideIn 0.3s ease-out;
+    }
+
+    .log-entry {
+        animation: slideIn 0.2s ease-out;
+    }
+    </style>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialize all sections as expanded
+        const sections = ['taskHistory', 'deletedTasks', 'activityLogs', 'accessLogs', 'taskLogs'];
+        sections.forEach(section => {
+            const element = document.getElementById(section);
+            if (element) {
+                element.style.display = 'block';
+            }
+        });
+    });
+
+    function toggleSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        const isVisible = section.style.display !== 'none';
+        section.style.display = isVisible ? 'none' : 'block';
+        
+        const button = event.currentTarget;
+        const icon = button.querySelector('i');
+        icon.classList.toggle('fa-chevron-down');
+        icon.classList.toggle('fa-chevron-up');
+    }
+    </script>
+
+    <%- include('../partials/footer') %>
+</body>
+</html> 
