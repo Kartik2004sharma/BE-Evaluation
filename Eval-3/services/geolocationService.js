@@ -2,22 +2,22 @@ const axios = require('axios');
 
 const getGeolocationData = async (ip) => {
     try {
-        // Check if the IP is localhost
-        if (ip === '::1' || ip === '127.0.0.1') {
-            return {
-                ip: ip,
-                city: 'Local Development',
-                region: 'Development Environment',
-                country: 'Local',
-                loc: '0,0',
-                org: 'Local Network',
-                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-            };
-        }
-
-        // Use ipinfo.io API to get geolocation data
-        const response = await axios.get(`https://ipinfo.io/${ip}/json`);
-        return response.data;
+        // Use IPStack API to get geolocation data
+        // If it's localhost, we'll query IPStack for the public IP
+        const publicIpResponse = await axios.get('https://api.ipify.org?format=json');
+        const publicIp = publicIpResponse.data.ip;
+        
+        const response = await axios.get(`http://api.ipstack.com/${publicIp}?access_key=${process.env.IPSTACK_API_KEY}`);
+        
+        return {
+            ip: publicIp,
+            city: response.data.city || 'Unknown',
+            region: response.data.region_name || 'Unknown',
+            country: response.data.country_name || 'Unknown',
+            loc: `${response.data.latitude || 0},${response.data.longitude || 0}`,
+            org: response.data.connection?.isp || 'Unknown',
+            timezone: response.data.time_zone?.id || Intl.DateTimeFormat().resolvedOptions().timeZone
+        };
     } catch (error) {
         console.error('Error fetching geolocation data:', error);
         // Return fallback data in case of error

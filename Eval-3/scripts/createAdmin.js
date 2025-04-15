@@ -14,7 +14,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/tasksmart
 // Create admin user
 const createAdmin = async () => {
     try {
-        // Check if admin already exists
+        
         const adminExists = await User.findOne({ email: 'admin@tasksmart.com' });
         if (adminExists) {
             console.log('Admin user already exists');
@@ -25,7 +25,7 @@ const createAdmin = async () => {
         const newAdmin = new User({
             name: 'Admin',
             email: 'admin@tasksmart.com',
-            password: 'admin123', // You should change this in production
+            password: 'admin123', 
             role: 'admin'
         });
 
